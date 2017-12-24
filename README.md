@@ -6,11 +6,52 @@ An application for the Fitbit Ionic can quickly become a mess. This micro-framew
 
 Copy `view.js` file to your project.
 
-## Architecture
+## API
 
-### Elements Group
+### DOM selectors
 
-To group SVG elements wrap them in the class.
+#### `function` $( selector )
+
+jQuery-style `$` selector to access SVG DOM elements. Just two simple selectors are supported:
+
+- `$( '#id-of-an-element' )` - will call `document.getElementById( 'id-of-an-element' )`
+- `$( '.class-name' )` - will call `document.getElementsByClassName( 'class-name' )`
+
+When called without arguments, returns the `document`.
+
+```javascript
+import { $ } from './view'
+
+// Will search for #element globally
+$( '#element' ).style.display = 'inline';
+```
+
+#### `function` $at( id-selector )
+
+Create the $-function to search in the given DOM subtree.
+Used to enforce DOM elements isulation for different views.
+
+When called without arguments, returns the root element.
+
+```javascript
+import { $at } from './view'
+
+const $ = $at( '#myscreen' );
+
+// Make #element visible
+$().style.display = 'inline';
+
+// Will search descendants of #myscreen only
+$( '#element' ).style.display = 'inline';
+```
+
+### Elements Group Pattern
+
+To group SVG elements just wrap them in the class as shown below.
+This pattern allows caching of the references to SVG elements and must be preferred
+to ad-hoc elements lookups.
+
+Elements group is the lightweight alternative to subviews, and should be preferred to subviews when possible.
 
 ```javascript
 class Time {
@@ -22,9 +63,20 @@ class Time {
     this.seconds.text = ( seconds % 60 ).toFixed( 2 );
   }
 }
+
+// Use an element group from the View...
+class Timer extends View {
+  time = new Time();
+  ...
+  
+  render(){
+    ...
+    this.time.render( this.seconds )
+  }
+}
 ```
 
-### View
+### View 
 
 View is the stateful group of elements. The difference from the elements group is that views can me contained in each other and they have `onMount`/`onUnmount` lifecycle hooks. API:
 
@@ -95,18 +147,20 @@ MyApp.start();
 Application.instance.screen2();
 ```
 
-## API Reference
+## Project structure
 
-### DOM selectors
+Application may consist of several screens. The following project structure is recommended for this case:
 
-```javascript
-import { $, $at } from './view'
-```
+- `app/` <- standard app folder
+  - `index.js` <- `Application` subclass class, which will switch the screens
+  - `view.js` <- copy this file to your project
+  - `screen1.js` <- each screen is defined as `View` subclass
+  - `screen2/` <- if there are many modules related to the single screen, group them to the folder
+  - ...
+- `resources/` <- standard resources folder
+  - `index.gui` <- include screens SVG files with `<link rel="import" href="screen/index.gui" />`
+  - `widgets.gui` <- include screens CSS files with `<link rel="stylesheet" href="screen/styles.css" />`
+  - `screen1.gui` <- put SVG for your screens to different files
+  - `screen2/` <- group SVG, CSS, and images used by a screen to a folder
 
-#### `function` $( selector )
 
-Search DOM globally.
-
-#### `function` $at( selector )
-
-Create the function to search in the DOM subtree.
