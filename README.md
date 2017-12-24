@@ -8,6 +8,8 @@ Copy `view.js` file to your project.
 
 ## API
 
+This is really the tiny library, and its more about programming convention and design rules than the funtionality. Don't be afraid to read the code, there's almost nothing to read.
+
 ### DOM selectors
 
 #### `function` $( selector )
@@ -45,7 +47,7 @@ $().style.display = 'inline';
 $( '#element' ).style.display = 'inline';
 ```
 
-### Elements Group Pattern
+### `pattern` Elements Group
 
 To group SVG elements just wrap them in the class as shown below.
 This pattern allows caching of the references to SVG elements and must be preferred
@@ -76,7 +78,7 @@ class Timer extends View {
 }
 ```
 
-### View 
+### `class` View 
 
 View is the stateful group of elements. The difference from the elements group is that views can me contained in each other and they have `onMount`/`onUnmount` lifecycle hooks. API:
 
@@ -120,7 +122,7 @@ class Timer extends View {
 }
 ```
 
-### Application
+### `class` Application
 
 Application is the main view having the single `screen` subview.
 It's the singleton which is globally accessible through the `Application.instance` variable.
