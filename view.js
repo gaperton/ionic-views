@@ -1,6 +1,16 @@
 import document from "document";
 
+/**
+ * Search for the DOM element globally.
+ */
 export const $ = $wrap( document );
+
+/**
+ * Create $ function to search in the DOM subtree.
+ */
+export function $at( selector ){
+  return $wrap( $( selector ) );
+}
 
 export function $wrap( element ){
   return selector => {
@@ -15,10 +25,9 @@ export function $wrap( element ){
   }
 }
 
-export function $at( selector ){
-  return $wrap( $( selector ) );
-}
-
+/**
+ * View class
+ */
 export class View {
   // el = $( '#your-view-id' )
   _subviews = [];
@@ -71,6 +80,9 @@ export class View {
   }    
 }
 
+/**
+ * Application singleton
+ */
 export class Application extends View {
   set screen( view ){
     if( this._screen ) this.remove( this._screen );
