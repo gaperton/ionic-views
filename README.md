@@ -10,10 +10,10 @@ Micro-framework supporting the subview pattern for the FitBit OS
 import { $, $at } from './views'
 ```
 
-#### `$( selector )`
+#### `function` $( selector )
 
 Search DOM globally.
 
-#### `$at( selector )`
+#### `function` $at( selector )
 
 Create the function to search in the DOM subtree.
