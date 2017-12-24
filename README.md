@@ -94,6 +94,7 @@ View is the stateful group of elements. The difference from the elements group i
 Example:
 
 ```javascript
+import { $at } from './view'
 const $ = $at( '#timer' );
 
 class Timer extends View {
@@ -104,15 +105,18 @@ class Timer extends View {
     clock.ontick = this.onTick;
   }
   
-  seconds = 0;
+  ticks = 0;
   onTick = () => {
-    this.seconds++;
+    this.ticks++;
     this.render();
   }
   
+  minutes = $( '#minutes' );
+  seconds = $( '#seconds' );
   render(){
-    this.minutes.text = Math.floor( seconds / 60 );
-    this.seconds.text = ( seconds % 60 ).toFixed( 2 );
+    const { ticks } = this;
+    this.minutes.text = Math.floor( ticks / 60 );
+    this.seconds.text = ( ticks % 60 ).toFixed( 2 );
   }
   
   onUnmount(){
