@@ -1,6 +1,6 @@
 # Ionic Views
 
-An application for the Fitbit Ionic can quickly become a mess. This micro-framework provides basic support for View and subview patterns in less than 100 LOCs, providing the necessary structure to keep the view layer code manageable when your application grows.
+An application for the Fitbit Ionic can quickly become a mess. This micro-framework provides basic support for View and subview patterns in about 100 LOCs, providing the necessary structure to keep the view layer code manageable when your application grows.
 
 ## Installation
 
@@ -8,13 +8,11 @@ Copy `view.js` file to your project.
 
 ## API
 
-This is really the tiny library, and its more about programming convention and design rules than the funtionality. Don't be afraid to read the code, there's almost nothing to read.
-
 ### DOM selectors
 
 #### `function` $( selector )
 
-jQuery-style `$` selector to access SVG DOM elements. Just two simple selectors are supported:
+Global jQuery-style `$` selector to access SVG DOM elements returning raw elements. Just two simple selectors are supported:
 
 - `$( '#id-of-an-element' )` - will call `document.getElementById( 'id-of-an-element' )`
 - `$( '.class-name' )` - will call `document.getElementsByClassName( 'class-name' )`
@@ -31,7 +29,7 @@ $( '#element' ).style.display = 'inline';
 #### `function` $at( id-selector )
 
 Create the $-function to search in the given DOM subtree.
-Used to enforce DOM elements isulation for different views.
+Used to enforce DOM elements isolation for different views.
 
 When called without arguments, returns the root element.
 
@@ -40,7 +38,7 @@ import { $at } from './view'
 
 const $ = $at( '#myscreen' );
 
-// Make #element visible
+// Make #myscreen visible
 $().style.display = 'inline';
 
 // Will search descendants of #myscreen only
@@ -131,18 +129,19 @@ class Timer extends View {
 Application is the main view having the single `screen` subview.
 It's the singleton which is globally accessible through the `Application.instance` variable.
 
+- `MyApp.start()` - instantiate and mount the application.
+- `Application.instance` - access an application instance.
+- `Application.switchTo( 'screen' )` - switch to the screen which is the member of an application.
+- `app.screen` - property used to retrieve and set current screen view.
+- `app.render()` - render all the subviews, _if display is on_. Is called automaticaly when display goes on.
+
 ```javascript
 class MyApp extends Application {
+  screen1 = new Screen1View();
+  screen2 = new Screen2View();
+  
   onMount(){
     this.screen = new LoadingView();
-  }
-  
-  screen1(){
-    this.screen = new Screen2View();
-  }
-  
-  screen2(){
-    this.screen = new Screen2View();
   }
 }
 
@@ -150,7 +149,7 @@ MyApp.start();
 
 ...
 // To switch the screen, use:
-Application.instance.screen2();
+Application.switchTo( 'screen2' );
 ```
 
 ## Project structure
@@ -168,5 +167,3 @@ Application may consist of several screens. The following project structure is r
   - `widgets.gui` <- include screens CSS files with `<link rel="stylesheet" href="screen/styles.css" />`
   - `screen1.gui` <- put SVG for your screens to different files
   - `screen2/` <- group SVG, CSS, and images used by a screen to a folder
-
-
