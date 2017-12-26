@@ -1,16 +1,7 @@
 import document from "document";
+import { display } from "display";
 
-/**
- * Search for the DOM element globally.
- */
 export const $ = $wrap( document );
-
-/**
- * Create $ function to search in the DOM subtree.
- */
-export function $at( selector ){
-  return $wrap( $( selector ) );
-}
 
 export function $wrap( element ){
   return selector => {
@@ -25,9 +16,10 @@ export function $wrap( element ){
   }
 }
 
-/**
- * View class
- */
+export function $at( selector ){
+  return $wrap( $( selector ) );
+}
+
 export class View {
   // el = $( '#your-view-id' )
   _subviews = [];
@@ -80,10 +72,8 @@ export class View {
   }    
 }
 
-/**
- * Application singleton
- */
 export class Application extends View {
+  // Current application screen.
   set screen( view ){
     if( this._screen ) this.remove( this._screen );
     this.insert( this._screen = view ).render();
@@ -91,10 +81,32 @@ export class Application extends View {
   
   get screen(){ return this._screen; }
   
+  // Switch the screen
+  static switchTo( screenName ){
+    // Poke the display so it will be on after the screen switch...
+    display.poke();
+    const { instance } = Application;
+    instance.screen = instance[ screenName ];
+  }
+
+  render(){
+    // Prevent render when screen is off.
+    if( display.on ){
+      super.render();
+    }
+  }
+
+  // Application is the singleton. Here's the instance.
   static instance = null;
 
   static start(){
+    // Instantiate and mount an application.
     const app = Application.instance = new this();
     app.mount();
+    
+    // Refresh UI when the screen in on.
+    display.onchange = () => {
+      app.render();
+    }
   }
 }
