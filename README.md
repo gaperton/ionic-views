@@ -12,7 +12,7 @@ Copy `view.js` file to your project.
 
 #### `function` $( selector )
 
-Global jQuery-style `$` selector to access SVG DOM elements returning raw elements. Just two simple selectors are supported:
+Global jQuery-style `$` selector to access SVG DOM elements returning raw elements. No wrapping is performed, the raw element or elements array is returned. Just two simple selectors are supported:
 
 - `$( '#id-of-an-element' )` - will call `document.getElementById( 'id-of-an-element' )`
 - `$( '.class-name' )` - will call `document.getElementsByClassName( 'class-name' )`
@@ -43,6 +43,15 @@ $().style.display = 'inline';
 
 // Will search descendants of #myscreen only
 $( '#element' ).style.display = 'inline';
+```
+
+#### `function` $wrap( element )
+
+Create the $-function to search in the given DOM subtree wrapping the given element. Internally,
+
+```javascript
+const $ = $wrap( document );
+const $at = selector => $wrap( $( selector ) );
 ```
 
 ### `pattern` Elements Group
@@ -80,7 +89,7 @@ class Timer extends View {
 
 View is the stateful group of elements. The difference from the elements group is that views can me contained in each other and they have `onMount`/`onUnmount` lifecycle hooks. API:
 
-- `view.el` - root view element. Used to show and hide the view.
+- `view.el` - optional root view element. Used to show and hide the view when its mounted and unmounted.
 - `view.mount()` - make the `subview.el` visible, call the `subview.onMount()` hook.
 - `view.onMount()` - place to insert subviews and register events listeners.
 - `view.render()` - render the view and all of its subviews.
