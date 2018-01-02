@@ -53,13 +53,9 @@ export function $wrap( element ){
   return selector => selector ? $( selector, element ) : element;
 }
 
-$.wrap = $wrap;
-
 export function $at( selector ){
   return $wrap( $( selector ) );
 }
-
-$.at = $at;
 
 export class View {
   // el = $( '#your-view-id' )
