@@ -1,24 +1,69 @@
 import document from "document";
 import { display } from "display";
 
-export const $ = $wrap( document );
+/**
+ * 
+ * @param {*} selector = the sequence of '.class-name' | '#element-id' | 'element-type'
+ * @param {*} el = optional search root
+ */
+export function $( query, el ){
+  const selectors = query.match(/\.|#|\S+/g);
+  let root = el || document;
+  
+  for( let i = 0; root && i < selectors.length; i++ ){
+    const s = selectors[ i ];
+    root = s === '#' ? $id( selectors[ ++i ], root ) :
+           s === '.' ? $classAndType( 'getElementsByClassName', selectors[ ++i ], root ) :
+                       $classAndType( 'getElementsByTypeName', s, root );
+  }
+
+  return root;
+}
+
+// Search subtrees by id...
+function $id( id, arr ){
+  if( Array.isArray( arr ) ){
+    const res = [];
+
+    for( let el of arr ){
+      const x = el.getElementById( id );
+      if( x ) res.push( x );
+    }
+  
+    return res;
+  }
+
+  return arr.getElementById( id );
+}
+
+// Search subtrees by class or type...
+function $classAndType( method, arg, arr ){
+  if( Array.isArray( arr ) ){
+    const res = [];
+
+    for( let el of arr ){
+      for( let el2 of el[ method ]( arg ) ){
+        res.push( el2 );
+      }
+    }
+  
+    return res;
+  }
+
+  return arr[ method ]( arg );
+}
 
 export function $wrap( element ){
-  return selector => {
-    if( selector ){
-      const symbol = selector.substr( 1 );
-      return selector[ 0 ] === '.' ?
-            element.getElementsByClassName( symbol ) :
-            element.getElementById( symbol );            
-    }
-
-    return element;
-  }
+  return selector => selector ? $( selector, element ) : element;
 }
+
+$.wrap = $wrap;
 
 export function $at( selector ){
   return $wrap( $( selector ) );
 }
+
+$.at = $at;
 
 export class View {
   // el = $( '#your-view-id' )
