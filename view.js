@@ -107,10 +107,17 @@ export class View {
   }
 
   render(){
-    for( let subview of this._subviews ){
-      subview.render();
+    if( display.on ){
+      for( let subview of this._subviews ){
+        subview.render();
+      }
+
+      this.onRender();
     }
-  }    
+  }
+  
+  // Callback called on render
+  onRender(){}
 }
 
 export class Application extends View {
@@ -128,13 +135,6 @@ export class Application extends View {
     display.poke();
     const { instance } = Application;
     instance.screen = instance[ screenName ];
-  }
-
-  render(){
-    // Prevent render when screen is off.
-    if( display.on ){
-      super.render();
-    }
   }
 
   // Application is the singleton. Here's the instance.

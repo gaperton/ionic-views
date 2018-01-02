@@ -104,7 +104,8 @@ View is the stateful group of elements. The difference from the elements group i
 - `view.el` - optional root view element. Used to show and hide the view when its mounted and unmounted.
 - `view.mount()` - make the `subview.el` visible, call the `subview.onMount()` hook.
 - `view.onMount()` - place to insert subviews and register events listeners.
-- `view.render()` - render the view and all of its subviews.
+- `view.render()` - render the view and all of its subviews if the display is on. No-op otherwise.
+- `view.onRender()` - place actual UI update code here.
 - `view.unmount()` - hide the `subview.el`, unmount all the subviews, call the `view.onUnmount()` hook.
 - `view.onUnmount()` - place to unregister events listeners.
 - `view.insert( subview )` - insert and mount the subview.
@@ -132,7 +133,8 @@ class Timer extends View {
   
   minutes = $( '#minutes' );
   seconds = $( '#seconds' );
-  render(){
+
+  onRender(){
     const { ticks } = this;
     this.minutes.text = Math.floor( ticks / 60 );
     this.seconds.text = ( ticks % 60 ).toFixed( 2 );
@@ -154,7 +156,7 @@ It's the singleton which is globally accessible through the `Application.instanc
 - `Application.instance` - access an application instance.
 - `Application.switchTo( 'screen' )` - switch to the screen which is the member of an application.
 - `app.screen` - property used to retrieve and set current screen view.
-- `app.render()` - render all the subviews, _if display is on_. Is called automaticaly when display goes on.
+- `app.render()` - render all the subviews, _if display is on_. It's called automaticaly when display goes on.
 
 ```javascript
 class MyApp extends Application {
