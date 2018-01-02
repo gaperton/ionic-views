@@ -4,7 +4,8 @@ An application for the Fitbit Ionic can quickly become a mess. This micro-framew
 
 ## Installation
 
-Copy `view.js` file to your project.
+This repository contains the starting boilerplate for the multi-screen project. You could copy all the files as they are, 
+or just copy the `/app/view.js` file to your project.
 
 ## API
 
