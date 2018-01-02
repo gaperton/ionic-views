@@ -6,18 +6,24 @@ class MultiScreenApp extends Application {
     screen1 = new Screen1();
     screen2 = new Screen2();
 
+    // Called once on application's start...
     onMount(){
-        this.screen = this.screen2; // Same as Application.switchTo( 'screen1' );
+        // Set initial screen.
+        // Same as Application.switchTo( 'screen1' ), which might be used to switch screen from anywhere.
+        this.screen = this.screen2; 
 
-        document.onkeypress = this.switchScreens;
+        document.onkeypress = this.onKeyPress;
     }
 
-    switchScreens = ({ key }) => {
+    // Event handler, must be pinned down to the class to preserve `this`.
+    onKeyPress = ({ key }) => {
         if( key === 'down' ){
+            // Just switch between two screens we have.
             Application.switchTo( this.screen === this.screen1 ? 'screen2' : 'screen1' );
         }
     }
     
 }
 
+// Create and start the application.
 MultiScreenApp.start();
