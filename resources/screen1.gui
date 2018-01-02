@@ -1,0 +1,4 @@
+<svg id="screen-1" display="none">
+    <text>Current time:</text>
+    <text id="current-time">------------</text>
+</svg>

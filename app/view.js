@@ -122,6 +122,10 @@ export class Application extends View {
   // Current application screen.
   set screen( view ){
     if( this._screen ) this.remove( this._screen );
+
+    // Poke the display so it will be on after the screen switch...
+    display.poke();
+
     this.insert( this._screen = view ).render();
   }
   
@@ -129,8 +133,6 @@ export class Application extends View {
   
   // Switch the screen
   static switchTo( screenName ){
-    // Poke the display so it will be on after the screen switch...
-    display.poke();
     const { instance } = Application;
     instance.screen = instance[ screenName ];
   }
