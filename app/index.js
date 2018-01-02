@@ -21,8 +21,7 @@ class MultiScreenApp extends Application {
             // Just switch between two screens we have.
             Application.switchTo( this.screen === this.screen1 ? 'screen2' : 'screen1' );
         }
-    }
-    
+    }   
 }
 
 // Create and start the application.

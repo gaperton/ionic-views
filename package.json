@@ -1,0 +1,15 @@
+{
+  "fitbit": {
+    "appUUID": "d84e4e76-0ded-40f2-98f7-f4de4dc27fc4",
+    "appType": "app",
+    "appDisplayName": "boilerplate",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#607d8b",
+    "requestedPermissions": [],
+    "i18n": {
+      "en": {
+        "name": "boilerplate"
+      }
+    }
+  }
+}

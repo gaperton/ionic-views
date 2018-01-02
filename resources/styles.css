@@ -1,4 +1,6 @@
-text {
-    font-family: System-Regular;
-    fill: white;
+.defaultText {
+  font-size: 32;
+  font-family: System-Regular;
+  font-weight: regular;
+  text-length: 32;
 }
