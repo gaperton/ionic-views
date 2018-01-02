@@ -1,9 +1,11 @@
 import document from "document";
 import { display } from "display";
 
+const querySplitter = /\.|#|\S+/g;
+
 // Main DOM search method.
 export function $( query, el ){
-  const selectors = query.match(/\.|#|\S+/g);
+  const selectors = query.match( querySplitter );
   let root = el || document;
   
   for( let i = 0; root && i < selectors.length; i++ ){
