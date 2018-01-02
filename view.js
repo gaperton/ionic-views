@@ -1,11 +1,7 @@
 import document from "document";
 import { display } from "display";
 
-/**
- * 
- * @param {*} selector = the sequence of '.class-name' | '#element-id' | 'element-type'
- * @param {*} el = optional search root
- */
+// Main DOM search method.
 export function $( query, el ){
   const selectors = query.match(/\.|#|\S+/g);
   let root = el || document;

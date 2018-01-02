@@ -10,33 +10,46 @@ Copy `view.js` file to your project.
 
 ### DOM selectors
 
-#### `function` $( selector )
+#### `function` $( query, [ element ] )
 
-Global jQuery-style `$` selector to access SVG DOM elements returning raw elements. No wrapping is performed, the raw element or elements array is returned. Just two simple selectors are supported:
+jQuery-style `$` query to access SVG DOM elements. No wrapping is performed, the raw element or elements array is returned.
+If an `element` argument is provided, the element's subtree will be searched; otherwise the search will be global.
 
-- `$( '#id-of-an-element' )` - will call `document.getElementById( 'id-of-an-element' )`
-- `$( '.class-name' )` - will call `document.getElementsByClassName( 'class-name' )`
+The `query` is the space-separated sequence of the following simple selectors:
 
-When called without arguments, returns the `document`.
+- `#id-of-an-element` - will call `element.getElementById( 'id-of-an-element' )` and return en element.
+- `.class-name` - will call `element.getElementsByClassName( 'class-name' )` and return elements array.
+- `element-type` - will call `element.getElementsByTypeName( 'element-type' )` and return elements array.
+
+If all of the selectors in the query are `#id` selectors, the single element will be returned. Otherwise, an array of elements will be returned.
 
 ```javascript
 import { $ } from './view'
 
 // Will search for #element globally
 $( '#element' ).style.display = 'inline';
+
+// Find the root element of the screen, then show all underlying elements having "hidden" class.
+$( '#my-screen .hidden' ).forEach( ({ style }) => style.display = 'inline' );
+
+// The same sequence made in two steps. See `$at()` function.
+const screen = $( '#my-screen' );
+$( '.hidden', screen ).forEach( ({ style }) => style.display = 'inline' );
+
 ```
+
+> Avoid repeated ad-hoc $-queries. Cache found elements when possible. See Elements Group pattern.
 
 #### `function` $at( id-selector )
 
-Create the $-function to search in the given DOM subtree.
-Used to enforce DOM elements isolation for different views.
+Create the $-function to search in the given DOM subtree. Used to enforce DOM elements isolation for different views.
 
 When called without arguments, returns the root element.
 
 ```javascript
 import { $at } from './view'
 
-const $ = $at( '#myscreen' );
+const $ = $at( '#my-screen' );
 
 // Make #myscreen visible
 $().style.display = 'inline';
@@ -47,10 +60,9 @@ $( '#element' ).style.display = 'inline';
 
 #### `function` $wrap( element )
 
-Create the $-function to search in the given DOM subtree wrapping the given element. Internally,
+Create the $-function to search in the given DOM subtree wrapping the given element.
 
 ```javascript
-const $ = $wrap( document );
 const $at = selector => $wrap( $( selector ) );
 ```
 
