@@ -1,5 +1,5 @@
 import { View, $at } from './view'
-import { clock } from 'clock'
+import clock from 'clock'
 
 const $ = $at( '#screen-1' );
 
