@@ -2,6 +2,17 @@
 
 An application for the Fitbit Ionic can quickly become a mess. This micro-framework provides basic support for View and subview patterns in about 100 LOCs, providing the necessary structure to keep the view layer code manageable when your application grows.
 
+## Features
+
+- jQuery-style `$` DOM selectors.
+- `View` base class:
+  - views can be dynamically inserted and removed;
+  - `onMount()`/`onUnmount()` lifecycle hooks;
+  - hierarchical subviews support;
+  - supressed render when device screen is off to reduce energy consumption.
+- `Application` base class with screen switching support.
+- Multi-screen application boilerplate.
+
 ## Installation
 
 This repository contains the starting boilerplate for the multi-screen project. You could copy all the files as they are, 
