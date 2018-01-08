@@ -1,3 +1,4 @@
+import document from "document";
 import { Application } from './view'
 import { Screen1 } from './screen1'
 import { Screen2 } from './screen2'
