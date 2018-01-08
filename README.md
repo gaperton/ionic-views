@@ -96,7 +96,7 @@ View is the stateful group of elements. The difference from the elements group i
 - `view.unmount()` - hide the `subview.el`, unmount all the subviews, call the `view.onUnmount()` hook.
 - `view.onUnmount()` - place to unregister events listeners.
 - `view.insert( subview )` - insert and mount the subview.
-- `view.remove( subview )` - remove the unmount the subview.
+- `view.remove( subview )` - remove and unmount the subview.
 
 Example:
 
