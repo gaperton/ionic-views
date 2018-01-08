@@ -1,19 +1,58 @@
 import document from "document";
 import { display } from "display";
 
-export const $ = $wrap( document );
+const querySplitter = /\.|#|\S+/g;
+
+// Main DOM search method.
+export function $( query, el ){
+  const selectors = query.match( querySplitter );
+  let root = el || document;
+  
+  for( let i = 0; root && i < selectors.length; i++ ){
+    const s = selectors[ i ];
+    root = s === '#' ? $id( selectors[ ++i ], root ) :
+           s === '.' ? $classAndType( 'getElementsByClassName', selectors[ ++i ], root ) :
+                       $classAndType( 'getElementsByTypeName', s, root );
+  }
+
+  return root;
+}
+
+// Search subtrees by id...
+function $id( id, arr ){
+  if( Array.isArray( arr ) ){
+    const res = [];
+
+    for( let el of arr ){
+      const x = el.getElementById( id );
+      if( x ) res.push( x );
+    }
+  
+    return res;
+  }
+
+  return arr.getElementById( id );
+}
+
+// Search subtrees by class or type...
+function $classAndType( method, arg, arr ){
+  if( Array.isArray( arr ) ){
+    const res = [];
+
+    for( let el of arr ){
+      for( let el2 of el[ method ]( arg ) ){
+        res.push( el2 );
+      }
+    }
+  
+    return res;
+  }
+
+  return arr[ method ]( arg );
+}
 
 export function $wrap( element ){
-  return selector => {
-    if( selector ){
-      const symbol = selector.substr( 1 );
-      return selector[ 0 ] === '.' ?
-            element.getElementsByClassName( symbol ) :
-            element.getElementById( symbol );            
-    }
-
-    return element;
-  }
+  return selector => selector ? $( selector, element ) : element;
 }
 
 export function $at( selector ){
@@ -66,16 +105,27 @@ export class View {
   }
 
   render(){
-    for( let subview of this._subviews ){
-      subview.render();
+    if( display.on ){
+      for( let subview of this._subviews ){
+        subview.render();
+      }
+
+      this.onRender();
     }
-  }    
+  }
+  
+  // Callback called on render
+  onRender(){}
 }
 
 export class Application extends View {
   // Current application screen.
   set screen( view ){
     if( this._screen ) this.remove( this._screen );
+
+    // Poke the display so it will be on after the screen switch...
+    display.poke();
+
     this.insert( this._screen = view ).render();
   }
   
@@ -83,17 +133,8 @@ export class Application extends View {
   
   // Switch the screen
   static switchTo( screenName ){
-    // Poke the display so it will be on after the screen switch...
-    display.poke();
     const { instance } = Application;
     instance.screen = instance[ screenName ];
-  }
-
-  render(){
-    // Prevent render when screen is off.
-    if( display.on ){
-      super.render();
-    }
   }
 
   // Application is the singleton. Here's the instance.

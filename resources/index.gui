@@ -1,0 +1,4 @@
+<svg>
+  <link rel="import" href="screen1.gui" />
+  <link rel="import" href="screen2.gui" />
+</svg>

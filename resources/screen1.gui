@@ -1,0 +1,4 @@
+<svg id="screen-1" display="none">
+    <text id="minutes">--</text>
+    <text id="seconds" x="50">--</text>
+</svg>

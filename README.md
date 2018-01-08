@@ -4,39 +4,53 @@ An application for the Fitbit Ionic can quickly become a mess. This micro-framew
 
 ## Installation
 
-Copy `view.js` file to your project.
+This repository contains the starting boilerplate for the multi-screen project. You could copy all the files as they are, 
+or just copy the `/app/view.js` file to your project.
 
 ## API
 
 ### DOM selectors
 
-#### `function` $( selector )
+#### `function` $( query, [ element ] )
 
-Global jQuery-style `$` selector to access SVG DOM elements returning raw elements. No wrapping is performed, the raw element or elements array is returned. Just two simple selectors are supported:
+jQuery-style `$` query to access SVG DOM elements. No wrapping is performed, the raw element or elements array is returned.
+If an `element` argument is provided, the element's subtree will be searched; otherwise the search will be global.
 
-- `$( '#id-of-an-element' )` - will call `document.getElementById( 'id-of-an-element' )`
-- `$( '.class-name' )` - will call `document.getElementsByClassName( 'class-name' )`
+The `query` is the space-separated sequence of the following simple selectors:
 
-When called without arguments, returns the `document`.
+- `#id-of-an-element` - will call `element.getElementById( 'id-of-an-element' )` and return en element.
+- `.class-name` - will call `element.getElementsByClassName( 'class-name' )` and return elements array.
+- `element-type` - will call `element.getElementsByTypeName( 'element-type' )` and return elements array.
+
+If all of the selectors in the query are `#id` selectors, the single element will be returned. Otherwise, an array of elements will be returned.
 
 ```javascript
 import { $ } from './view'
 
 // Will search for #element globally
 $( '#element' ).style.display = 'inline';
+
+// Find the root element of the screen, then show all underlying elements having "hidden" class.
+$( '#my-screen .hidden' ).forEach( ({ style }) => style.display = 'inline' );
+
+// The same sequence made in two steps. See `$at()` function.
+const screen = $( '#my-screen' );
+$( '.hidden', screen ).forEach( ({ style }) => style.display = 'inline' );
+
 ```
+
+> Avoid repeated ad-hoc $-queries. Cache found elements when possible. See Elements Group pattern.
 
 #### `function` $at( id-selector )
 
-Create the $-function to search in the given DOM subtree.
-Used to enforce DOM elements isolation for different views.
+Create the $-function to search in the given DOM subtree. Used to enforce DOM elements isolation for different views.
 
 When called without arguments, returns the root element.
 
 ```javascript
 import { $at } from './view'
 
-const $ = $at( '#myscreen' );
+const $ = $at( '#my-screen' );
 
 // Make #myscreen visible
 $().style.display = 'inline';
@@ -47,10 +61,9 @@ $( '#element' ).style.display = 'inline';
 
 #### `function` $wrap( element )
 
-Create the $-function to search in the given DOM subtree wrapping the given element. Internally,
+Create the $-function to search in the given DOM subtree wrapping the given element.
 
 ```javascript
-const $ = $wrap( document );
 const $at = selector => $wrap( $( selector ) );
 ```
 
@@ -92,7 +105,8 @@ View is the stateful group of elements. The difference from the elements group i
 - `view.el` - optional root view element. Used to show and hide the view when its mounted and unmounted.
 - `view.mount()` - make the `subview.el` visible, call the `subview.onMount()` hook.
 - `view.onMount()` - place to insert subviews and register events listeners.
-- `view.render()` - render the view and all of its subviews.
+- `view.render()` - render the view and all of its subviews if the display is on. No-op otherwise.
+- `view.onRender()` - place actual UI update code here.
 - `view.unmount()` - hide the `subview.el`, unmount all the subviews, call the `view.onUnmount()` hook.
 - `view.onUnmount()` - place to unregister events listeners.
 - `view.insert( subview )` - insert and mount the subview.
@@ -120,7 +134,8 @@ class Timer extends View {
   
   minutes = $( '#minutes' );
   seconds = $( '#seconds' );
-  render(){
+
+  onRender(){
     const { ticks } = this;
     this.minutes.text = Math.floor( ticks / 60 );
     this.seconds.text = ( ticks % 60 ).toFixed( 2 );
@@ -142,7 +157,7 @@ It's the singleton which is globally accessible through the `Application.instanc
 - `Application.instance` - access an application instance.
 - `Application.switchTo( 'screen' )` - switch to the screen which is the member of an application.
 - `app.screen` - property used to retrieve and set current screen view.
-- `app.render()` - render all the subviews, _if display is on_. Is called automaticaly when display goes on.
+- `app.render()` - render all the subviews, _if display is on_. It's called automaticaly when display goes on.
 
 ```javascript
 class MyApp extends Application {
