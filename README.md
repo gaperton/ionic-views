@@ -115,7 +115,7 @@ View is the stateful group of elements. The difference from the elements group i
 
 - `view.el` - optional root view element. Used to show and hide the view when its mounted and unmounted.
 - `view.mount()` - make the `subview.el` visible, call the `subview.onMount()` hook.
-- `view.onMount()` - place to insert subviews and register events listeners.
+- `view.onMount( options )` - place to insert subviews and register events listeners. `options` is the first parameter passed the view's constructor.
 - `view.render()` - render the view and all of its subviews if the display is on. No-op otherwise.
 - `view.onRender()` - place actual UI update code here.
 - `view.unmount()` - hide the `subview.el`, unmount all the subviews, call the `view.onUnmount()` hook.
