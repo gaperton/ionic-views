@@ -1,13 +1,12 @@
 # FitbitOS JavaScript Optimization Guidelines
 
 FitbitOS relies on [JerryScript](http://jerryscript.net/) virtual machine. JerryScript is a full-featured JS engine fully compatible with ECMA-262 edition 5.1. It is designed for microcontrollers having restricted RAM and is primarily optimized for the low memory consumption. It can operate with less than 64KB RAM, it doesn't have a JIT, and it is in general much slower than popular JS engines.
+Here's [the document](https://wiki.tizen.org/images/5/52/04-JerryScript_ECMA_Internal_and_Memory_Management.pdf) describing JerryScript internals and its memory architecture.
 
 Fitbit doesn't publish the detailed hardware specs for their devices, however, it's known that Fitbit Ionic:
 - uses ARM Cortex-M4F core running at 120 MHz.
-- has pretty decent hardware 2D accellerator supporting vector graphics and bitmap rotation.
 - has 64KB of JS memory heap.
-
-https://wiki.tizen.org/images/5/52/04-JerryScript_ECMA_Internal_and_Memory_Management.pdf
+- has pretty decent hardware 2D accellerator supporting vector graphics and bitmap rotation.
 
 ## There's no JIT, everything is slow
 
