@@ -156,7 +156,7 @@ This code, however, completely avoids this 64 bytes allocation:
 
 Seems to be a good idea. Right?
 
-Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. Second example throws out of memory exception in a situation when first one doesn't. *Function's bytecode takes more memory than the preallocated object, and both the heap and the code share the same 64K memory quote.*
+Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. In this case, *"dayToSchedule" function's bytecode takes more memory than the preallocated "days" object (~300 vs 80 bytes)*. Since both the heap and the code share the same 64K memory quote, it makes the situation worse.
 
 ## In doubts? Measure.
 
