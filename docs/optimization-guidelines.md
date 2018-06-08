@@ -6,7 +6,7 @@ Here's [the document](https://wiki.tizen.org/images/5/52/04-JerryScript_ECMA_Int
 Fitbit doesn't publish the detailed hardware specs for their devices, however, [it's known](https://toshiba.semicon-storage.com/eu/product/assp/applite/tz1200.html) that Fitbit Ionic:
 - uses ARM Cortex-M4F core running at 120 MHz.
 - has pretty decent hardware 2D accellerator supporting vector graphics and bitmap rotation.
-- has 64KB of JS memory heap.
+- has 64KB limit of JS memory for the code and the heap combined.
 
 ## There's no JIT, everything is slow
 
@@ -156,4 +156,12 @@ This code, however, completely avoids this 64 bytes allocation:
 
 Seems to be a good idea. Right?
 
-Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. Second example throws out of memory exception in a situation when first one doesn't. *Function's bytecode takes more memory than the preallocated object, and both the heap and the code share the same memory quote.*
+Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. Second example throws out of memory exception in a situation when first one doesn't. *Function's bytecode takes more memory than the preallocated object, and both the heap and the code share the same 64K memory quote.*
+
+## In doubts? Measure.
+
+There's the special API to [measure an amount allocated JS memory](https://dev.fitbit.com/build/reference/device-api/system/).
+It's not always 100% byte-to-byte accurate, but it can give you the good idea when your optimizations really helped or made things worse.
+
+    import { memory } from "system";
+    console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
