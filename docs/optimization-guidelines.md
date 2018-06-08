@@ -126,7 +126,7 @@ The corresponding binary flas bitmap would be just an integer value taking 4 byt
     x |= 0b0100;
     x &= 0b1011;
 
-## DO NOT: Use functions instead of hashmaps and arrays to save heap memory
+## DO NOT: Use switch instead of hashmaps
 
 The following constant defined in the application will take about 7*8 ~ 64 bytes of heap. Literal strings are being allocated in the separate literal storage during the parsing phase.
 
@@ -156,7 +156,27 @@ This code, however, completely avoids this 64 bytes allocation:
 
 Seems to be a good idea. Right?
 
-Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. In this case, *"dayToSchedule" function's bytecode takes more memory than the preallocated "days" object (~300 vs 80 bytes)*. Since both the heap and the code share the same 64K memory quote, it makes the situation worse.
+Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. In this case, *"dayToSchedule" function's bytecode takes more memory than the preallocated "days" object (~300 vs 80 bytes)*. Since both the heap and the code share the same 64K memory quote, replacing an object with switch statement makes the situation worse.
+
+## Static vs dynamic allocation
+
+Now let's take the `days` object from the previous example, and try to wrap its creation in a function. It might seem that if we delay the object creation to the moment when it will be really needed, it will help us to save some memory.
+
+    function getDays(){
+        return {
+            "Sunday": "No School",
+            "Monday": "Normal",
+            "Tuesday": "Normal",
+            "Wednesday": "Normal",
+            "Thursday": "Normal",
+            "Friday": "Normal",
+            "Saturday": "No School"
+        }
+    }
+
+Guess what? The code above consumes **more memory** than the statically allocated `days` object from the previous section **even if getDays() function is never called** (something like ~200 vs 80 bytes):
+
+As a general rule for embedded JS programming, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
 
 ## In doubts? Measure.
 
