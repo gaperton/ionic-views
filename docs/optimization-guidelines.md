@@ -158,7 +158,7 @@ Seems to be a good idea. Right?
 
 Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. In this case, *"dayToSchedule" function's bytecode takes more memory than the preallocated "days" object (~300 vs 80 bytes)*. Since both the heap and the code share the same 64K memory quote, replacing an object with switch statement makes the situation worse.
 
-## Static vs dynamic allocation
+## Static vs dynamic resource allocation
 
 Now let's take the `days` object from the previous example, and try to wrap its creation in a function. It might seem that if we delay the object creation to the moment when it will be really needed, it will help us to save some memory.
 
@@ -174,9 +174,9 @@ Now let's take the `days` object from the previous example, and try to wrap its 
         }
     }
 
-Guess what? The code above consumes **more memory** than the statically allocated `days` object from the previous section **even if getDays() function is never called** (something like ~200 vs 80 bytes):
+Guess what? The code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_. Wrapping the code in a function adds about ~100 bytes, which is a bit more than the size of the `days` object in the heap. It would make sense to prefer dynamic allocation if the object is large enough (more than 16 props, contains nested members, etc).
 
-As a general rule for embedded JS programming, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
+As a general rule for embedded programming in a constrained environment, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
 
 ## In doubts? Measure.
 
