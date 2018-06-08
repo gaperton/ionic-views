@@ -154,4 +154,4 @@ This code, however, completely avoids this 64 bytes allocation:
 
 Seems to be a good idea. Right?
 
-Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. Second option throws out of memory exception in a situation when first option doesn't. Function's bytecode takes more memory than the preallocated object, and both the heap and the code share the same memory quote.
+Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. Second option throws out of memory exception in a situation when first option doesn't. *Function's bytecode takes more memory than the preallocated object, and both the heap and the code share the same memory quote.*
