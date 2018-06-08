@@ -3,14 +3,14 @@
 FitbitOS relies on [JerryScript](http://jerryscript.net/) virtual machine. JerryScript is a full-featured JS engine fully compatible with ECMA-262 edition 5.1. It is designed for microcontrollers having restricted RAM and is primarily optimized for the low memory consumption. It can operate with less than 64KB RAM, it doesn't have a JIT, and it is in general much slower than popular JS engines.
 Here's [the document](https://wiki.tizen.org/images/5/52/04-JerryScript_ECMA_Internal_and_Memory_Management.pdf) describing JerryScript internals and its memory architecture.
 
-Fitbit doesn't publish the detailed hardware specs for their devices, however, it's known that Fitbit Ionic:
+Fitbit doesn't publish the detailed hardware specs for their devices, however, [it's known](https://toshiba.semicon-storage.com/eu/product/assp/applite/tz1200.html) that Fitbit Ionic:
 - uses ARM Cortex-M4F core running at 120 MHz.
-- has 64KB of JS memory heap.
 - has pretty decent hardware 2D accellerator supporting vector graphics and bitmap rotation.
+- has 64KB of JS memory heap.
 
 ## There's no JIT, everything is slow
 
-Keep in mind that in contrast to the desktop JS engines JerryScript is a pure interpreter, so optimization techniques you're probably familiar with doesn't work. Don't expect any smart optimization from the runtime, it's not smart. An every extra operation costs you performance.
+Keep in mind that in contrast to the desktop JS engines JerryScript is a pure interpreter, so optimization techniques you're probably familiar with doesn't work. Don't expect any smart optimization from the runtime, it's not smart. An every extra operation costs you performance. It might seem scary at first, but it's not that bad because the rendering pipeline is hardware accelerated and JS is used for the reaction on events from sensors and user input only.
 
 Take this loop as an example:
 
@@ -28,7 +28,7 @@ The bottom line is that nothing is free in JerryScript, but the performance is e
 
 ## Floating point numbers are expensive
 
-JS Number type doesn't make a difference between integers and floats, and ECMA-262 requires the floating point to implement 64-bit IEEE math. ARM Cortex-M4F has not hardware accellerated 64-bit floating point math, thus it's implemented in software and is quite slow. You can expect an execution speed to be about 4-5K of arithmetic operations per second for a Fitbit Ionic. Integer math is slightly (about 25%) faster.
+JS Number type doesn't make a difference between integers and floats, and ECMA-262 requires the floating point to implement [64-bit IEEE math](https://en.wikipedia.org/wiki/IEEE_754). ARM Cortex-M4F has not hardware accellerated 64-bit floating point math, thus it's implemented in software and is quite slow. You can expect an execution speed to be about 4-5K of arithmetic operations per second for a Fitbit Ionic. Integer math is slightly (about 25%) faster.
 
 There's an important difference between integers and floating point numbers in the memory consumption, however.
 
