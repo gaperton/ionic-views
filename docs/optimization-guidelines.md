@@ -174,13 +174,13 @@ Now let's take the `days` object from the previous example, and try to wrap its 
         }
     }
 
-Guess what? The code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_. Wrapping the code in a function *adds about ~100 bytes*, which is a bit more than the size of the `days` object in the heap. It would make sense to prefer dynamic allocation if the object is large enough (more than 16 props, contains nested members, etc).
+Guess what? The code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_. The reason is that wrapping the code in a function creates the function object (functions are first-class objects in JS) *adding about ~100 bytes*, which is a bit more than the size of the `days` object in the heap. It would make sense to do this trick if the object is large enough (more than 16 props, contains nested members, etc).
+
+The fact that even an empty function takes ~100 bytes leads us to important conclustion: **don't make a function without a reason.** If your particular function is small that's fine, but the programming style with a lot of small functions should be avoided when possible.
 
 As a general rule for embedded programming in a constrained environment, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
 
-The fact that even an empty function takes ~100 bytes leads us to another important conclustion: **don't make a function without a reason.** If your particular function is small that's fine, but the programming style with a lot of small functions should be avoided.
-
-Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be absolutely avoided in a resource-constrained environment.
+Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be absolutely avoided in a resource-constrained environment like Fitbit smartwatch.
 
 ## In doubts? Measure.
 
