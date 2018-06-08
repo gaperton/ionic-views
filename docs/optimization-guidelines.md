@@ -184,8 +184,10 @@ Taking it all together, the "JS functional programming" style which relies on bo
 
 ## In doubts? Measure.
 
-There's the special API to [measure an amount allocated JS memory](https://dev.fitbit.com/build/reference/device-api/system/).
-It's not always 100% byte-to-byte accurate, but it can give you the good idea when your optimizations really helped or made things worse.
+1. Do not over-optimize until you are in trouble. There's a good chance that 64K will be enough for your smartwatch app.
+2. Do not guess when making optimizations. Measure.
+
+There's the special API to [measure an amount of allocated JS memory](https://dev.fitbit.com/build/reference/device-api/system/). It's not always 100% byte-to-byte accurate, but it can give you a good idea when your optimizations really helped or made things worse.
 
     import { memory } from "system";
     console.log("JS memory: " + memory.js.used + "/" + memory.js.total);
