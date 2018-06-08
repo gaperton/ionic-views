@@ -58,14 +58,16 @@ If you have array of integers, consider usage of [Int16Array](https://developer.
 
 ## Prefer small objects
 
-An object is represented in memory as linked list of property pairs, taking about 8 bytes per propery (plus some constant).
+An object is represented in memory as linked list of property pairs, taking about 8 bytes per propery plus some constant (obj size = Math.ceil( propsCount / 2 ) * 16 + 16 ).
+
+    let empty = {}; // 16 bytes are allocated.
 
 ![props](./object-properties.png)
 
-When the number of object properties is greater than 16, it will allocate the property hashmap in addition to the property list. Therefore, an object size is:
+When the number of object properties is greater than 16, it will allocate the property hashmap in addition to the property list. Therefore, an approximate object size is:
 
-- ~8 bytes per property for small objects (16 members and less)
-- ~10 bytes per property + some constant (~32 bytes) for large object.
+- ~8 bytes per property for small objects + 16 bytes (16 members and less)
+- ~10 bytes per property + some bigger constant (~32 bytes) for large object.
 
 Closure (lexical environment) and objects use the same internal structure, which means that there will be no difference in memory layout for these examples:
 
@@ -77,7 +79,7 @@ Closure (lexical environment) and objects use the same internal structure, which
         return () => a + b; // Will allocate an object with a shape similar to 'o1'
     })();
 
-Thus, it's beneficial that both objects and functions will not be excessively large.
+Thus, it's beneficial that both objects and functions will not be excessively large. 
 
 ## Consider object of arrays vs array of objects
 
@@ -85,7 +87,7 @@ Suppose we have an array of objects of uniform shape:
 
     const points = [ { x : 1.5, y : 1.5 }, ... ];
 
-An object takes 2 * 8 = 16 bytes, 64-bit floats will take another 16 giving us 32 bytes per object. So, `points` array will take 32 * N + 4 * N = 36 * N bytes.
+An object takes about 2 * 8 = 16 bytes, 64-bit floats will take another 16 giving us 32 bytes per object. So, `points` array will take about 32 * N + 4 * N = 36 * N bytes (calculations are approximate, constants are ignored).
 
 Now lets turn the data structure inside out. It will take 24 * N + 16 bytes which is about 30% less than the previous option.
 
