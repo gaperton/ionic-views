@@ -126,8 +126,6 @@ The corresponding binary flas bitmap would be just an integer value taking 4 byt
 
 ## DO NOT: Use functions instead of hashmaps and arrays to save heap memory
 
-> Tests shows that the optimization described below actually make things worse. **Don't do like that**.
-
 The following constant defined in the application will take about 7*8 ~ 64 bytes of heap. Literal strings are being allocated in the separate literal storage during the parsing phase.
 
     const days = {
