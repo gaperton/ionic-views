@@ -126,7 +126,7 @@ The corresponding binary flas bitmap would be just an integer value taking 4 byt
 
 ## DO NOT: Use functions instead of hashmaps and arrays to save heap memory
 
-> Tests shows that the optimization described below actually make things worse. *Don't do like that*.
+> Tests shows that the optimization described below actually make things worse. **Don't do like that**.
 
 The following constant defined in the application will take about 7*8 ~ 64 bytes of heap. Literal strings are being allocated in the separate literal storage during the parsing phase.
 
@@ -154,4 +154,4 @@ This code, however, completely avoids this 64 bytes allocation:
         }
     }
 
-Seems to be a good idea, right? Surprisingly, *tests shows that the first option consumes less memory*. Either JS code is allocated in heap, or the heap and the code share the same memory quote. In any case, don't do that, it won't help.
+Seems to be a good idea, right? Surprisingly, **tests shows that the first option consumes less memory**. Second option throws out of memory exception in a situation when first option doesn't. Function's bytecode takes more memory than the preallocated object, and either JS code is allocated in heap or the heap and the code share the same memory quote. **In any case, don't do that, it's not an optimization**.
