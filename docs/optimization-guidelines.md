@@ -58,7 +58,7 @@ If you have array of integers, consider usage of [Int16Array](https://developer.
 
 ## Prefer small objects
 
-An object is represented in memory as linked list of property pairs, taking about 8 bytes per propery.
+An object is represented in memory as linked list of property pairs, taking about 8 bytes per propery (plus some constant).
 
 ![props](./object-properties.png)
 
