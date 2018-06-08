@@ -87,7 +87,7 @@ Suppose we have an array of objects of uniform shape:
 
 An object takes 2 * 8 = 16 bytes, 64-bit floats will take another 16 giving us 32 bytes per object. So, `points` array will take 32 * N + 4 * N = 36 * N bytes.
 
-Now lets turn the data structure inside out. It will take 24 * N + 16 bytes which is about 50% less than the previous option.
+Now lets turn the data structure inside out. It will take 24 * N + 16 bytes which is about 30% less than the previous option.
 
     const points = { xs : [ 1.5, ... ], ys : [ 1.5, ... };
     
