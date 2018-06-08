@@ -122,7 +122,7 @@ Having the arrays of numbers, we can use `Float64Array`, which will give us 16 *
 
     const points = { xs : new Float64Array( N ), ys : new Float64Array( N ) };
 
-And finally, if we switch from `Float64Array` to `Float32Array`, it will cut the size of the data structure further by half, giving us 8 * N + 16. Now our code is 4.5 times memory hungry than the original one.
+And finally, if we switch from `Float64Array` to `Float32Array`, it will cut the size of the data structure further by half, giving us 8 * N + 16. Now our code is 4.5 times less memory hungry than the original one.
 
 ## Use functions instead of hashmaps and arrays to save heap memory
 
