@@ -2,7 +2,7 @@
 
 An application for the Fitbit Ionic can quickly become a mess. This micro-framework provides basic support for View and subview patterns in about 100 LOCs, providing the necessary structure to keep the view layer code manageable when your application grows.
 
-> Read [FitbitOS JavaScript Optimization Guidlines](/docs/optimization-guidelines.md) to make sure you understand the limitations and of the platform you're working with.
+> Read [FitbitOS JavaScript Optimization Guidlines](/docs/optimization-guidelines.md) to make sure you understand the limitations of the platform you're working with.
 
 ## Features
 
