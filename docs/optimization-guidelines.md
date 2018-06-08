@@ -154,4 +154,6 @@ This code, however, completely avoids this 64 bytes allocation:
         }
     }
 
-Seems to be a good idea, right? Surprisingly, **tests shows that the first option consumes less memory**. Second option throws out of memory exception in a situation when first option doesn't. Function's bytecode takes more memory than the preallocated object, and either JS code is allocated in heap or the heap and the code share the same memory quote. **In any case, don't do that, it's not an optimization**.
+Seems to be a good idea. Right?
+
+Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. Second option throws out of memory exception in a situation when first option doesn't. Function's bytecode takes more memory than the preallocated object, and both the heap and the code share the same memory quote.
