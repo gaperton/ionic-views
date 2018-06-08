@@ -79,6 +79,24 @@ Closure (lexical environment) and objects use the same internal structure, which
 
 Thus, it's beneficial that both objects and functions will not be excessively large.
 
+## Consider object of arrays vs array of objects
+
+Suppose we have an array of objects of uniform shape:
+
+    const points = [ { x : 1.5, y : 1.5 }, ... ];
+
+An object takes 2 * 8 = 16 bytes, 64-bit floats will take another 16 giving us 32 bytes per object. So, `points` array will take 32 * N + 4 * N = 36 * N bytes.
+
+Now lets turn the data structure inside out. It will take 24 * N + 16 bytes which is about 50% less than the previous option.
+
+    const points = { xs : [ 1.5, ... ], ys : [ 1.5, ... };
+    
+Having the arrays of numbers, we can use `Float64Array`, which will give us 16 * N + 16 bytes. It's more than twice less than for the original code.
+
+    const points = { xs : new Float64Array( N ), ys : new Float64Array( N ) };
+
+And finally, if we switch from `Float64Array` to `Float32Array`, it will cut the size of the data structure further by half, giving us 8 * N + 16. Now our code is 4.5 times less memory hungry than the original one.
+
 ## Pack boolean flags to bitmaps
 
 This object holding the set of boolean flags will take about 4 x 8 = 32 bytes.
@@ -105,24 +123,6 @@ The corresponding binary flas bitmap would be just an integer value taking 4 byt
 
     x |= 0b0100;
     x &= 0b1011;
-
-## Objects of arrays vs array of objects
-
-Suppose we have an array of objects of uniform shape:
-
-    const points = [ { x : 1.5, y : 1.5 }, ... ];
-
-An object takes 2 * 8 = 16 bytes, 64-bit floats will take another 16 giving us 32 bytes per object. So, `points` array will take 32 * N + 4 * N = 36 * N bytes.
-
-Now lets turn the data structure inside out. It will take 24 * N + 16 bytes which is about 50% less than the previous option.
-
-    const points = { xs : [ 1.5, ... ], ys : [ 1.5, ... };
-    
-Having the arrays of numbers, we can use `Float64Array`, which will give us 16 * N + 16 bytes. It's more than twice less than for the original code.
-
-    const points = { xs : new Float64Array( N ), ys : new Float64Array( N ) };
-
-And finally, if we switch from `Float64Array` to `Float32Array`, it will cut the size of the data structure further by half, giving us 8 * N + 16. Now our code is 4.5 times less memory hungry than the original one.
 
 ## Use functions instead of hashmaps and arrays to save heap memory
 
