@@ -158,7 +158,7 @@ Seems to be a good idea. Right?
 
 Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. In this case, *"dayToSchedule" function's bytecode takes more memory than the preallocated "days" object (~300 vs 80 bytes)*. Since both the heap and the code share the same 64K memory quote, replacing an object with switch statement makes the situation worse.
 
-## Static vs dynamic resource allocation, and function size
+## Static vs dynamic resource allocation, and function cost
 
 Now let's take the `days` object from the previous example, and try to wrap its creation in a function. It might seem that if we delay the object creation to the moment when it will be really needed, it will help us to save some memory.
 
