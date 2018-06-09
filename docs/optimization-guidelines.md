@@ -156,7 +156,7 @@ This code, however, completely avoids this 64 bytes allocation:
 
 Seems to be a good idea. Right? Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**.
 
-We're not really avoiding an object's creation here as we intended. Functions are first-class objects in JS, so when we define a function not only creates the bytecode for the function body, but also creates the function object on the heap. An empty function *add about ~80 bytes in total*. The bytecode with a switch statement + function object makes `dayToSchedule()` to consume more memory than the statically allocated `days` object.
+Thing is that we're not really avoiding an object's creation here as we intended. Functions are first-class objects in JS. When we define a function, the function object with properties is being created on the heap, not just the bytecode for the function body. An empty function *add about ~80 bytes in total*. The bytecode with a switch statement + function object makes `dayToSchedule()` to consume more memory than the statically allocated `days` object.
 
 The fact that even an empty function reduce our memory by 80-100 bytes leads us to important conclustion: **don't make a function without a reason.** If your particular function is small that's fine, but the programming style relying on small functions should be avoided if possible.
 
@@ -176,11 +176,11 @@ Now let's take the `days` object from the previous example, and try to wrap its 
         }
     }
 
-Again, the code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_, because the function is an object too and `days` object is too small. It would make sense to do this trick if the object is large enough (more than 16 props, contains nested members, etc).
+Again, the code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_, because the function is not just the bytecode but an object too and `days` object is too small. It would make sense to do this trick if the object is large enough (more than 16 props, contains nested members, etc).
 
 As a general rule for embedded programming in a constrained environment, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
 
-Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be avoided in a resource-constrained environment like Fitbit smartwatch.
+Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be avoided in a environment like Fitbit smartwatch.
 
 ## In doubts? Measure.
 
