@@ -126,7 +126,7 @@ The corresponding binary flas bitmap would be just an integer value taking 4 byt
     x |= 0b0100;
     x &= 0b1011;
 
-## DO NOT: Use switch instead of hashmaps
+## Functions are objects too
 
 The following constant defined in the application will take about 7*8 ~ 64 bytes of heap. Literal strings are being allocated in the separate literal storage during the parsing phase.
 
@@ -154,11 +154,13 @@ This code, however, completely avoids this 64 bytes allocation:
         }
     }
 
-Seems to be a good idea. Right?
+Seems to be a good idea. Right? Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**.
 
-Nah, it's not! Surprisingly, **tests shows that the first option consumes less memory**. In this case, *"dayToSchedule" function's bytecode takes more memory than the preallocated "days" object (~300 vs 80 bytes)*. Since both the heap and the code share the same 64K memory quote, replacing an object with switch statement makes the situation worse.
+We're not really avoiding an object's creation here as we intended. Functions are first-class objects in JS, so when we define a function not only creates the bytecode for the function body, but also creates the function object on the heap. An empty function *add about ~80 bytes in total*. The bytecode with a switch statement + function object makes `dayToSchedule()` to consume more memory than the statically allocated `days` object.
 
-## Static vs dynamic resource allocation, and function cost
+The fact that even an empty function reduce our memory by 80-100 bytes leads us to important conclustion: **don't make a function without a reason.** If your particular function is small that's fine, but the programming style relying on small functions should be avoided if possible.
+
+## Static vs dynamic resource allocation
 
 Now let's take the `days` object from the previous example, and try to wrap its creation in a function. It might seem that if we delay the object creation to the moment when it will be really needed, it will help us to save some memory.
 
@@ -174,13 +176,11 @@ Now let's take the `days` object from the previous example, and try to wrap its 
         }
     }
 
-Guess what? The code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_. The reason is that wrapping the code in a function not only creates the bytecode for the function body, but also creates the function object in the heap (functions are first-class objects in JS) *adding about ~100 bytes in total*, which is a bit more than the size of the `days` object in the heap. It would make sense to do this trick if the object is large enough (more than 16 props, contains nested members, etc).
-
-The fact that even an empty function reduce our memory by ~100 bytes leads us to important conclustion: **don't make a function without a reason.** If your particular function is small that's fine, but the programming style with a lot of small functions should be avoided when possible.
+Again, the code above consumes **more memory** than the statically allocated `days` object from the previous section _even if `getDays()` function is never called_, because the function is an object too and `days` object is too small. It would make sense to do this trick if the object is large enough (more than 16 props, contains nested members, etc).
 
 As a general rule for embedded programming in a constrained environment, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
 
-Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be absolutely avoided in a resource-constrained environment like Fitbit smartwatch.
+Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be avoided in a resource-constrained environment like Fitbit smartwatch.
 
 ## In doubts? Measure.
 
