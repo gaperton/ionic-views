@@ -180,7 +180,11 @@ Again, the code above consumes **more memory** than the statically allocated `da
 
 As a general rule for embedded programming in a constrained environment, the static resource allocation is preferable. Try to reduce dynamic allocation to a reasonable minimum, and assign object references with `null` as soon as you don't need them.
 
-Taking it all together, the "JS functional programming" style which relies on both small functions and dynamically created immutable objects should be avoided in a environment like Fitbit smartwatch.
+## What about JS functional programming, it's so cool
+
+No, it's not. Not in JerryScript. "JS functional programming" relies on both small functions and dynamically created immutable objects. You should do exactly opposite things in a resource-constrained environment like Fitbit smartwatch.
+
+Also, React-like frameworks are impossible. You can't add/remove SVG DOM nodes in Fitbit SDK, and SVG DOM manipulation is generally much faster than comparing trees in memory. Not to mention that you don't really have memory; just modest 64KB.
 
 ## In doubts? Measure.
 
