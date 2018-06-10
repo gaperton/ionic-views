@@ -94,14 +94,11 @@ function updateTime( seconds ){
 }
 ```
 
-You may put update functions inside view's `onMount` method to allocate them dynamically, but it's not usually worth it. SVG DOM element reference takes 32 bytes.
+You may put update functions (or DOM elements initialization) inside of the view's `onMount` method to allocate them dynamically, but it's not usually worth it. SVG DOM element reference takes 32 bytes, and it's highly beneficial if it will be cached. Ad-hoc element lookups should be avoided.
 
 ### `pattern` Elements Group
 
-This pattern allows caching of the references to SVG elements and must be preferred
-to ad-hoc elements lookups.
-
-Elements group is the lightweight alternative to subviews, and should be preferred to subviews when possible.
+Elements group is another lightweight alternative to subviews. It could be used if there are more than one `render()` operation on the encapsulated elements. Otherwise, the simple update function is preferable.
 
 ```javascript
 class Time {
