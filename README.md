@@ -80,48 +80,36 @@ Create the $-function to search in the given DOM subtree wrapping the given elem
 const $at = selector => $wrap( $( selector ) );
 ```
 
-### `pattern` Update function
-
-An obvious and most memory-efficient way to encapsulate UI update logic is to define an update function. The function can be called directly from anywhere to update encapsulated elements. It should be preferred for small and simple widgets.
-
-```javascript
-const minutes = $( '#minutes' ),
-      seconds = $( '#seconds' );
-  
-function updateTime( seconds ){
-    minutes.text = Math.floor( seconds / 60 );
-    seconds.text = ( seconds % 60 ).toFixed( 2 );
-}
-```
-
-You may put update functions (or DOM elements initialization) inside of the view's `onMount` method to allocate them dynamically, but it's not usually worth it. SVG DOM element reference takes 32 bytes, and it's highly beneficial if it will be cached. Ad-hoc element lookups should be avoided.
-
 ### `pattern` Elements Group
 
-Elements group is another lightweight alternative to subviews. It could be used if there are more than one `render()` operation on the encapsulated elements. Otherwise, the simple update function is preferable.
+The most memory-efficient way to encapsulate UI update logic is to define an update function. The function can be called directly to update encapsulated elements. It should be preferred for small and simple widgets.
 
 ```javascript
-class Time {
-  minutes = $( '#minutes' );
-  seconds = $( '#seconds' );
+function time(){
+  // Preallocate SVG DOM elements. Ad-hoc DOM lookups should be avoided.
+  const minutes = $( '#minutes' ),
+        seconds = $( '#seconds' );
   
-  render( seconds ){
-    this.minutes.text = Math.floor( seconds / 60 );
-    this.seconds.text = ( seconds % 60 ).toFixed( 2 );
+  // Return update function.
+  return seconds => {
+      minutes.text = Math.floor( seconds / 60 );
+      seconds.text = ( seconds % 60 ).toFixed( 2 );
   }
 }
 
-// Use an element group from the View...
 class Timer extends View {
-  time = new Time();
+  // Create time widget.
+  time = time();
   ...
   
-  render(){
+  onRender(){
     ...
-    this.time.render( this.seconds )
+    this.time( this.seconds );
   }
 }
 ```
+
+SVG DOM element reference takes 32 bytes, and it's highly beneficial if it will be cached. Ad-hoc element lookups should be avoided.
 
 ### `class` View 
 
