@@ -80,9 +80,24 @@ Create the $-function to search in the given DOM subtree wrapping the given elem
 const $at = selector => $wrap( $( selector ) );
 ```
 
+### `pattern` Update function
+
+An obvious and most memory-efficient way to encapsulate UI update logic is to define an update function. The function can be called directly from anywhere to update encapsulated elements. It should be preferred for small and simple widgets.
+
+```javascript
+const minutes = $( '#minutes' ),
+      seconds = $( '#seconds' );
+  
+function updateTime( seconds ){
+    minutes.text = Math.floor( seconds / 60 );
+    seconds.text = ( seconds % 60 ).toFixed( 2 );
+}
+```
+
+You may put update functions inside view's `onMount` method to allocate them dynamically, but it's not usually worth it. SVG DOM element reference takes 32 bytes.
+
 ### `pattern` Elements Group
 
-To group SVG elements just wrap them in the class as shown below.
 This pattern allows caching of the references to SVG elements and must be preferred
 to ad-hoc elements lookups.
 
