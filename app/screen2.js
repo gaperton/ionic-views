@@ -8,6 +8,13 @@ export class Screen2 extends View {
     // When set, it will be used to show/hide the view on mount and unmount.
     el = $();
 
+    // Ad-hoc $-queries must be avoided.
+    // You've got dumb 120MHz MCU with no JIT in VM, thus everything you do is expensive.
+    // Put all of your elements here, like this:
+
+    // otherEl = $( '#other-el-id' );
+    // elementsArray = $( '.other-el-class' );
+
     // Lifecycle hook executed on `view.mount()`.
     onMount(){
         // TODO: insert subviews...
@@ -17,6 +24,7 @@ export class Screen2 extends View {
     // Lifecycle hook executed on `view.unmount()`.
     onUnmount(){
         // TODO: unsubscribe from events...
+      this.trash = null;
     }
 
     // Custom UI update logic, executed on `view.render()`.
@@ -25,4 +33,3 @@ export class Screen2 extends View {
         // Call this.render() to update UI.
     }
 }
-

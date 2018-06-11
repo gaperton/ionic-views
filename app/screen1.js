@@ -5,10 +5,10 @@ const $ = $at( '#screen-1' );
 
 export class Screen1 extends View {
     // Root view element used to show/hide the view.
-    el = $(); // Just the #screen-1 element.
+    el = $(); // Extract #screen-1 element.
 
     // Element group.
-    time = new Time();
+    time = time();
 
     // The view state.
     seconds = 0;
@@ -16,18 +16,17 @@ export class Screen1 extends View {
     onMount(){
         // Subscribe for the clock...
         clock.granularity = 'seconds';
-        clock.ontick = this.onTick;
-    }
-
-    onTick = () => {
-        // Update the state and force render.
-        this.seconds++;
-        this.render();
+        
+        clock.ontick = () => {
+            // Update the state and force render.
+            this.seconds++;
+            this.render();
+        }
     }
 
     onRender(){
         // Render the elements group.
-        this.time.render( this.seconds );
+        this.time( this.seconds );
     }
 
     onUnmount(){
@@ -35,19 +34,21 @@ export class Screen1 extends View {
         clock.granularity = 'off';
         clock.ontick = null;
     }
+
+    // Screens may have they own key handlers.
+    onKeyUp(){
+      console.log( 'Key Up!');
+    }
 }
 
-// Elements group. Used to group the DOM elements and their update logic together.
-class Time {
-    // Elements...
-    minutes = $( '#minutes' );
-    seconds = $( '#seconds' );
-    
-    // UI update method(s). Can have any name, it's just the pattern.
-    // Element groups have no lifecycle hooks, thus all the data required for UI update
-    // must be passed as arguments.
-    render( seconds ){
-      this.minutes.text = ( seconds / 60 ) | 0;
-      this.seconds.text = seconds % 60;
+
+// Elements group
+function time(){
+    const minutes = $( '#minutes' ),
+          seconds = $( '#seconds' );
+
+    return secs => {
+        minutes.text = ( secs / 60 ) | 0;
+        seconds.text = secs % 60;  
     }
 }

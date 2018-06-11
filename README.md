@@ -82,7 +82,7 @@ const $at = selector => $wrap( $( selector ) );
 
 ### `pattern` Elements Group
 
-The most memory-efficient way to encapsulate UI update logic is to define an update function. The function can be called directly to update encapsulated elements. It should be preferred for small and simple widgets.
+An obvious and most memory-efficient way to encapsulate UI update logic is to define an update function. The function can be called directly to update encapsulated elements. It should be preferred for small and simple widgets.
 
 ```javascript
 function time(){
@@ -116,11 +116,9 @@ SVG DOM element reference takes 32 bytes, and it's highly beneficial if it will 
 View is the stateful group of elements. The difference from the elements group is that views can me contained in each other and they have `onMount`/`onUnmount` lifecycle hooks. API:
 
 - `view.el` - optional root view element. Used to show and hide the view when its mounted and unmounted.
-- `view.mount()` - make the `subview.el` visible, call the `subview.onMount()` hook.
 - `view.onMount( options )` - place to insert subviews and register events listeners. `options` is the first parameter passed the view's constructor.
 - `view.render()` - render the view and all of its subviews if the display is on. No-op otherwise.
 - `view.onRender()` - place actual UI update code here.
-- `view.unmount()` - hide the `subview.el`, unmount all the subviews, call the `view.onUnmount()` hook.
 - `view.onUnmount()` - place to unregister events listeners.
 - `view.insert( subview )` - insert and mount the subview.
 - `view.remove( subview )` - remove and unmount the subview.
@@ -136,14 +134,13 @@ class Timer extends View {
   
   onMount(){
     clock.granularity = "seconds";
-    clock.ontick = this.onTick;
+    clock.ontick = () => {
+      this.ticks++;
+      this.render();
+    }
   }
   
   ticks = 0;
-  onTick = () => {
-    this.ticks++;
-    this.render();
-  }
   
   minutes = $( '#minutes' );
   seconds = $( '#seconds' );
@@ -166,27 +163,23 @@ class Timer extends View {
 Application is the main view having the single `screen` subview.
 It's the singleton which is globally accessible through the `Application.instance` variable.
 
-- `MyApp.start()` - instantiate and mount the application.
+- `MyApp.screens = { View1, View2, ... }` - all screens must be registered here.
+- `MyApp.start( 'View1' )` - instantiate and mount the application, display the screen with a goven name.
 - `Application.instance` - access an application instance.
-- `Application.switchTo( 'screen' )` - switch to the screen which is the member of an application.
-- `app.screen` - property used to retrieve and set current screen view.
-- `app.render()` - render all the subviews, _if display is on_. It's called automaticaly when display goes on.
+- `Application.switchTo( 'screenName' )` - switch to the screen which is the member of an application.
+- `app.screen` - property used to retrieve the current screen view.
+- `app.render()` - render everything, _if display is on_. It's called automaticaly when display goes on.
 
 ```javascript
 class MyApp extends Application {
-  screen1 = new Screen1View();
-  screen2 = new Screen2View();
-  
-  onMount(){
-    this.screen = new LoadingView();
-  }
+  screens = { Screen1View, Screen2View, LoadingView }
 }
 
-MyApp.start();
+MyApp.start( 'LoadingView' );
 
 ...
 // To switch the screen, use:
-Application.switchTo( 'screen2' );
+Application.switchTo( 'Screen2View' );
 ```
 
 ## Project structure
