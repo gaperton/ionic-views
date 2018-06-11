@@ -109,6 +109,8 @@ class Timer extends View {
 }
 ```
 
+SVG DOM element reference takes 32 bytes, and it's highly beneficial if it will be cached. Ad-hoc element lookups should be avoided.
+
 ### `class` View 
 
 View is the stateful group of elements. The difference from the elements group is that views can me contained in each other and they have `onMount`/`onUnmount` lifecycle hooks. API:
