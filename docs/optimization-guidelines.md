@@ -26,6 +26,18 @@ It happens because the comparison with 1000 is more expensive than the simple ch
 
 The bottom line is that nothing is free in JerryScript, but the performance is easy to predict. Carefuly review your code, remove extra operations, cache intermediate results in valiables, and do the rest of stuff people did on their Commodore 64 in 80th.
 
+## DO NOT use for-of loop
+
+Fitbit SDK uses TypeScript to transpile modern JavaScript to ES5 which is recognized by JerryScript VM. Many ES6 and ES7 features comes with a hidden cost. The `for-of` loop is being transpiled in very inefficient way.
+
+    // DO NOT:
+    for( let y of x ) z += y;
+    
+When we replace it with a raw for loop it will release about 750 bytes of memory:
+
+    // DO:
+    for( let i = x.length; i--; ) z += y[i];
+
 ## Floating point numbers are expensive
 
 JS Number type doesn't make a difference between integers and floats, and ECMA-262 requires the floating point to implement [64-bit IEEE math](https://en.wikipedia.org/wiki/IEEE_754). ARM Cortex-M4F has not hardware accellerated 64-bit floating point math, thus it's implemented in software and is quite slow. You can expect an execution speed to be about 4-5K of arithmetic operations per second for a Fitbit Ionic. Integer math is slightly (about 25%) faster.
