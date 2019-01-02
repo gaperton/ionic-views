@@ -7,9 +7,6 @@ export class Screen1 extends View {
     // Root view element used to show/hide the view.
     el = $(); // Extract #screen-1 element.
 
-    // Element group.
-    time = time();
-
     // The view state.
     seconds = 0;
 
@@ -26,7 +23,7 @@ export class Screen1 extends View {
 
     onRender(){
         // Render the elements group.
-        this.time( this.seconds );
+        time( this.seconds );
     }
 
     onUnmount(){
@@ -41,14 +38,11 @@ export class Screen1 extends View {
     }
 }
 
-
 // Elements group
-function time(){
-    const minutes = $( '#minutes' ),
-          seconds = $( '#seconds' );
+const minutes = $( '#minutes' ),
+      seconds = $( '#seconds' );
 
-    return secs => {
-        minutes.text = ( secs / 60 ) | 0;
-        seconds.text = secs % 60;  
-    }
+const time = secs => {
+    minutes.text = ( secs / 60 ) | 0;
+    seconds.text = secs % 60;  
 }

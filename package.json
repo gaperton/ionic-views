@@ -6,10 +6,21 @@
     "iconFile": "resources/icon.png",
     "wipeColor": "#607d8b",
     "requestedPermissions": [],
+    "buildTargets": [
+      "higgs"
+    ],
     "i18n": {
       "en": {
         "name": "boilerplate"
       }
     }
+  },
+  "scripts": {
+    "build": "fitbit-build",
+    "debug": "fitbit"
+  },
+  "devDependencies": {
+    "@fitbit/sdk": "^1.0.0",
+    "@fitbit/sdk-cli": "^1.0.0"
   }
 }
