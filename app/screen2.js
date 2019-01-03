@@ -33,3 +33,9 @@ export class Screen2 extends View {
         // Call this.render() to update UI.
     }
 }
+
+export const View = () => (
+    <svg id="screen-2" display="none">
+        <text>Screen 2</text>
+    </svg>
+);

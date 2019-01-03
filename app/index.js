@@ -1,6 +1,6 @@
 import document from "document";
 import { Application } from './view'
-import { Screen1 } from './screen1'
+import { Screen1, View as Screen1View } from './screen1'
 import { Screen2 } from './screen2'
 
 class MultiScreenApp extends Application {
@@ -16,3 +16,7 @@ class MultiScreenApp extends Application {
 
 // Start the application with Screen1.
 MultiScreenApp.start( 'Screen1' );
+
+export const View = () => (
+    <Screen1View />
+);

@@ -1,0 +1,1 @@
+<svg><use href="#push-button" id="my-button"><set href="#text" attributeName="text-buffer" to="Hello world"></set></use></svg>
