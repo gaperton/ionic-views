@@ -1,7 +1,9 @@
 import * as ReactDOMServer from 'react-dom/server'
+import * as React from 'react'
 import { writeFileSync } from 'fs'
 
-import * as React from 'react'
+import { widgets } from './view/tools'
 import View from './view'
 
-writeFileSync( './tst.svg', ReactDOMServer.renderToStaticMarkup( <View /> ) );
+writeFileSync( './resources/index.gui', ReactDOMServer.renderToStaticMarkup( <View/> ) );
+writeFileSync( './resources/widgets.gui', ReactDOMServer.renderToStaticMarkup( widgets() ) );

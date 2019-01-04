@@ -1,16 +1,13 @@
 import * as React from 'react'
 import { defs } from './tools'
-import { PushButton, Text } from './push-button';
+import Screen1 from './screen1'
+import Screen2 from './screen2'
 
-defs( 
-    <symbol id="5">
-        
-    </symbol>
-);
+defs( <link rel="stylesheet" href="styles.css" /> );
+defs( <link rel="import" href="/mnt/sysassets/widgets_common.gui" /> );
 
-export default
+export default () =>
     <svg>
-        <PushButton id="my-button">
-            <Text>Hello world</Text>
-        </PushButton>
+        <Screen1/>
+        <Screen2/>
     </svg>

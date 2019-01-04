@@ -1,4 +1,1 @@
-<svg>
-  <link rel="import" href="screen1.gui" />
-  <link rel="import" href="screen2.gui" />
-</svg>
+<svg><svg display="none" id="screen-1"><text id="minutes">--</text><text id="seconds" x="50">--</text><line id="line-0"></line><line id="line-1"></line><line id="line-2"></line><line id="line-3"></line><line id="line-4"></line><line id="line-5"></line><line id="line-6"></line><line id="line-7"></line><line id="line-8"></line><line id="line-9"></line></svg><svg display="none" id="screen-2"><text>Screen 2</text></svg></svg>
