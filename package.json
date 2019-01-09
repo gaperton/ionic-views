@@ -18,6 +18,11 @@
     "react-dom": "^16.7.0"
   },
   "devDependencies": {
-    "@types/react": "^16.7.18"
+    "@types/react": "^16.7.18",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  },
+  "scripts": {
+    "build": "node_modules/.bin/ts-node build.tsx"
   }
 }
