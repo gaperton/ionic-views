@@ -10,7 +10,11 @@
       "en": {
         "name": "boilerplate"
       }
-    }
+    },
+    "buildTargets": [
+      "higgs",
+      "meson"
+    ]
   },
   "dependencies": {
     "@types/node": "^10.12.18",
@@ -20,9 +24,11 @@
   "devDependencies": {
     "@types/react": "^16.7.18",
     "ts-node": "^7.0.1",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "@fitbit/sdk": "^1.0.0",
+    "@fitbit/sdk-cli": "~1.0.0"
   },
   "scripts": {
-    "build": "node_modules/.bin/ts-node build.tsx"
+    "build": "node_modules/.bin/ts-node ./view/tools/build.tsx && npx fitbit-build"
   }
 }

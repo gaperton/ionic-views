@@ -16,7 +16,3 @@ class MultiScreenApp extends Application {
 
 // Start the application with Screen1.
 MultiScreenApp.start( 'Screen1' );
-
-export const View = () => (
-    <Screen1View />
-);

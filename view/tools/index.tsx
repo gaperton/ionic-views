@@ -1,21 +1,15 @@
 
 import * as React from 'react'
 
-const defsContent = [];
+export const definitions = [];
 
+// Add definition to widgets.gui
 export function defs( jsx ){
-    defsContent.push( jsx );
+    definitions.push( jsx );
 }
 
-export function widgets(){
-    return (
-        <svg>
-            <defs>
-                { defsContent }
-            </defs>
-        </svg>
-    )
-}
+defs( <link rel="stylesheet" href="styles.css" /> );
+defs( <link rel="import" href="/mnt/sysassets/widgets_common.gui" /> );
 
 export const Screen = ({ children, ...props }) => (
     <svg display="none" { ...props }>
